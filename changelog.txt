@@ -1,0 +1,79 @@
+# Orion Changelog
+
+## Version 1.3.5 - Local Intelligence & UI Overhaul
+- Switched to embedded Llama 3.2 1B (GGUF) model for completely local, offline AI.
+- Removed external Ollama dependency for a lightweight installation.
+- Added futuristic "Neural Interface" loading screen with background initialization.
+- Removed legacy AI settings configuration.
+- Optimized performance for lower-end hardware.
+
+## Version 1.3.4 - Model Expansion
+- Added support for WizardLM 2 (wizardlm2:latest) model
+- Updated application version to 1.3.4
+
+## Version 1.3.3 - Enhanced Settings and Updates
+- Added Custom System Prompt setting to AI Settings
+- Added Customizable Startup Greeting to General Settings
+- Added "Check for Updates" feature in About tab
+- Updated application version to 1.3.3
+
+## Version 1.3.2 - Version Update and Maintenance
+- Updated version numbers across the application to 1.3.2
+- Minor maintenance updates and version synchronization
+
+## Version 1.3.1 - UI Improvements and Bug Fixes
+- Fixed GUI settings checkboxes to properly reflect saved state from settings file
+- Added automatic model status checking when opening settings window
+- Improved settings window initialization to show current configuration accurately
+- Updated version information to 1.3.1
+
+## Version 1.3 - Ollama Integration and Enhanced Features
+- Integrated Ollama for advanced AI responses using Gemma 3:1b model
+- Added fallback to custom keyword-based responses if Ollama fails
+- Enhanced conversational capabilities with system prompts
+- Added new commands: /analyze (text analysis), /summarize (text summarization), /calc (math calculations), /joke (random jokes), /fact (interesting facts)
+- Updated model information to reflect version 1.3 features
+- Improved error handling and response generation
+
+## Version 1.2.3 - Ultra Model and Advanced Features
+- Added Ultra (1.2) model with advanced intelligence and smarter responses
+- Added /analyze command for text analysis (Ultra only)
+- Added /summarize command for text summarization (Ultra only)
+- Enhanced /code command availability (Ultra only)
+- Improved command restrictions based on model versions
+- Legacy models have limited command access
+
+## Version 1.2.2 - UI Enhancements and Bug Fixes
+- Added legacy model dropdown selector with multiple legacy versions
+- Fixed /clear command to actually clear the chat history
+- Fixed /exit command to properly close the application
+- Enhanced settings window with model information and creator details
+- Improved model selection UI with better layout
+
+## Version 1.2.1 - Bug Fixes
+- Fixed AttributeError in generate_code method
+- Improved error handling for commands
+
+## Version 1.2.0 - Enhanced Features
+- Added multi-tab chat interface
+- Added model selection dropdown (Basic, Pro, Advanced)
+- Added more commands: /help, /clear, /exit
+- Enhanced GUI with modern design
+
+## Version 1.1.0 - Code Generation and Improvements
+- Added /code command for generating code snippets in Python, JavaScript, Java
+- Improved chatbot responses with custom training
+- Added more conversational training data
+
+## Version 1.0.0 - Initial Release
+- Created Orion, an AI chatbot by OmniNode
+- Implemented basic conversation capabilities using ChatterBot
+- Added CustomTkinter GUI for ChatGPT-like interface
+- Added /changelog command to display this changelog
+- Trained on English corpus for general conversations
+
+## Future Plans
+- Add more training data
+- Implement memory for conversation context
+- Add more commands
+- Improve GUI with themes and settings

@@ -1,0 +1,13 @@
+TERMS OF USE
+============
+
+By installing and using Orion AI Chatbot, you agree to the following terms:
+
+1. License
+   This software is provided "as is", without warranty of any kind.
+
+2. Usage
+   You agree to use this software responsibly and in compliance with all applicable laws.
+
+3. Liability
+   The authors are not liable for any damages arising from the use of this software.

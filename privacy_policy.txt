@@ -1,0 +1,13 @@
+Privacy Policy
+==============
+
+Orion AI Chatbot respects your privacy.
+
+1. Data Collection
+   Orion runs locally on your machine. Your chat history and settings are stored in your local AppData folder.
+
+2. AI Processing
+   Conversations are processed locally using Ollama. No chat data is sent to external servers by Orion, unless you explicitly use features that require internet access (like checking for updates).
+
+3. Contact
+   For questions, please contact the OmniNode team.

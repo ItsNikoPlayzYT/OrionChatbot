@@ -1,0 +1,8 @@
+customtkinter
+requests
+Pillow
+plyer
+transformers
+torch
+accelerate
+gguf
