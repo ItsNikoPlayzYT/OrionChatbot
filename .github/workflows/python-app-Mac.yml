@@ -1,10 +1,10 @@
-name: Build Orion macOS Installer
+name: Build Orion Installers
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 env:
   APP_NAME: "Orion-setup"
@@ -13,34 +13,41 @@ env:
 jobs:
   build-macos:
     runs-on: macos-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      # Step 1: Checkout code
+      - uses: actions/checkout@v4
 
-      - name: Set up Python 3.12
+      # Step 2: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
+      # Step 3: Install dependencies
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          # cx_Freeze DMG requirements (CRITICAL)
-          pip install cx_Freeze dmgbuild mac_alias
-          # Project dependencies
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install cx_Freeze pillow dmgbuild
 
-      - name: Build DMG with cx_Freeze
+      # Step 4: Convert PNG -> ICNS for macOS icon
+      - name: Generate ICNS for macOS
         run: |
+          mkdir -p icons.icns
+          sips -z 16 16    ${GITHUB_WORKSPACE}/icon.png --out icons.icns/icon_16x16.png
+          sips -z 32 32    ${GITHUB_WORKSPACE}/icon.png --out icons.icns/icon_32x32.png
+          sips -z 128 128  ${GITHUB_WORKSPACE}/icon.png --out icons.icns/icon_128x128.png
+          sips -z 256 256  ${GITHUB_WORKSPACE}/icon.png --out icons.icns/icon_256x256.png
+          sips -z 512 512  ${GITHUB_WORKSPACE}/icon.png --out icons.icns/icon_512x512.png
+          iconutil -c icns icons.icns -o ${GITHUB_WORKSPACE}/icon.icns
+
+      # Step 5: Build macOS DMG
+      - name: Build macOS DMG
+        run: |
+          cd $GITHUB_WORKSPACE
           python setup_mac.py bdist_dmg
 
-      - name: Inspect dist directory
-        run: |
-          echo "==== dist contents ===="
-          ls -lah dist || echo "dist directory not found"
-
-      - name: Upload macOS Artifact
+      # Step 6: Upload DMG artifact
+      - name: Upload macOS DMG
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APP_NAME }}-v${{ env.V_NUMBER }}-macOS
