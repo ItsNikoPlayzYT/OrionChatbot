@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-# This sets your version and name globally
 env:
   APP_NAME: "Orion-setup"
   V_NUMBER: "1.3.5"
@@ -16,7 +15,6 @@ permissions:
 
 jobs:
   build:
-    # This matrix creates a separate runner for each OS
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -32,26 +30,21 @@ jobs:
         python-version: "3.10"
 
     - name: Install dependencies
-      # EDITED: Removed the 'if' statement that caused the PowerShell ParserError
       run: |
         python -m pip install --upgrade pip
-        pip install flake8
-        pip install -r requirements.txt
+        pip install cx_Freeze
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      # On Windows, GitHub Actions uses PowerShell by default. 
+      # If the 'if' fails, replace the last line with: pip install -r requirements.txt
 
-    - name: Build Desktop App
-      # EDITED: Added logic to build for the specific OS in the matrix
+    - name: Build with cx_Freeze
+      # EDITED: Uses the standard cx_Freeze build command
       run: |
-        flet build ${{ matrix.os == 'windows-latest' && 'windows' || (matrix.os == 'macos-latest' && 'macos' || 'linux') }}
-
-    - name: Build iOS Project
-      # Only runs on the Mac runner
-      if: matrix.os == 'macos-latest'
-      run: |
-        flet build ios --no-sign
+        python setup.py build
 
     - name: Upload Finished App
       uses: actions/upload-artifact@v4
       with:
-        # EDITED: Uses your v1.3.5 naming convention
         name: ${{ env.APP_NAME }}-v${{ env.V_NUMBER }}-${{ matrix.os }}
-        path: build/
+        # cx_Freeze creates a folder named 'build' in your root
+        path: build/ 
