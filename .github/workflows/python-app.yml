@@ -1,0 +1,45 @@
+name: Build OmniNode Cross-Platform
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  release:
+    name: Build for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # We need all three to get the native file formats
+        os: [windows-latest, macos-latest, ubuntu-latest]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flet  # The engine that handles Windows/iOS/Android
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Build Desktop App
+      run: |
+        # This packages your main.py, logo, and legal files
+        flet build ${{ matrix.os == 'windows-latest' && 'windows' || (matrix.os == 'macos-latest' && 'macos' || 'linux') }}
+
+    # Special Step for iPhone (Requires macOS runner)
+    - name: Build iOS Project
+      if: matrix.os == 'macos-latest'
+      run: |
+        flet build ios --no-sign  # Generates the Xcode project for iPhone
+
+    - name: Upload Finished App
+      uses: actions/upload-artifact@v4
+      with:
+        name: OmniNode-${{ matrix.os }}
+        path: build/
