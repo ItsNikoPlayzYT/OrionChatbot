@@ -33,7 +33,7 @@ jobs:
 
       - name: Build DMG with cx_Freeze
         run: |
-          python setup.py bdist_dmg
+          python setup_mac.py bdist_dmg
 
       - name: Inspect dist directory
         run: |
