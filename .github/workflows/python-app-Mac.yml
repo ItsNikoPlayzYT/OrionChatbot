@@ -32,13 +32,21 @@ jobs:
       # Step 4: Convert logo.png -> ICNS for macOS
       - name: Generate ICNS for macOS
         run: |
-          mkdir -p icons.icns
-          sips -z 16 16    ${GITHUB_WORKSPACE}/logo.png --out icons.icns/icon_16x16.png
-          sips -z 32 32    ${GITHUB_WORKSPACE}/logo.png --out icons.icns/icon_32x32.png
-          sips -z 128 128  ${GITHUB_WORKSPACE}/logo.png --out icons.icns/icon_128x128.png
-          sips -z 256 256  ${GITHUB_WORKSPACE}/logo.png --out icons.icns/icon_256x256.png
-          sips -z 512 512  ${GITHUB_WORKSPACE}/logo.png --out icons.icns/icon_512x512.png
-          iconutil -c icns icons.icns -o ${GITHUB_WORKSPACE}/icon.icns
+          ICONSET=${GITHUB_WORKSPACE}/icons.iconset
+          mkdir -p $ICONSET
+          # Standard + @2x sizes
+          sips -z 16 16    ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_16x16.png
+          sips -z 32 32    ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_16x16@2x.png
+          sips -z 32 32    ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_32x32.png
+          sips -z 64 64    ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_32x32@2x.png
+          sips -z 128 128  ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_128x128.png
+          sips -z 256 256  ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_128x128@2x.png
+          sips -z 256 256  ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_256x256.png
+          sips -z 512 512  ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_256x256@2x.png
+          sips -z 512 512  ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_512x512.png
+          sips -z 1024 1024 ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_512x512@2x.png
+          # Build ICNS
+          iconutil -c icns $ICONSET -o ${GITHUB_WORKSPACE}/icon.icns
 
       # Step 5: Build macOS DMG
       - name: Build macOS DMG
