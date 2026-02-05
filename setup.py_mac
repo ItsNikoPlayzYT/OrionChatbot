@@ -12,8 +12,8 @@ build_exe_options = {
         "huggingface_hub", "gguf", "plyer", "tokenizers", "os"
     ],
     "include_files": [
-        "icon.png",
-        "icon.ico",
+        "icon.png",       # macOS icon
+        "icon.ico",       # Windows icon
         "changelog.txt",
         "privacy_policy.txt",
         "terms_of_use.txt"
@@ -33,6 +33,7 @@ bdist_dmg_options = {
 # --------------------
 base = None
 target_name = "Orion"
+icon_file = None
 
 if sys.platform == "win32":
     base = "Win32GUI"
@@ -40,11 +41,13 @@ if sys.platform == "win32":
     icon_file = "icon.ico"
 
 elif sys.platform == "darwin":
-    base = "GUI"              # REQUIRED to create .app
-    target_name = "Orion.app"
+    base = None               # macOS auto-infers GUI
+    target_name = "Orion"     # cx_Freeze will add .app automatically
     icon_file = "icon.png"
 
-else:
+else:  # Linux
+    base = None
+    target_name = "Orion"
     icon_file = None
 
 # --------------------
