@@ -1,7 +1,30 @@
 import sys
+import os
 from cx_Freeze import setup, Executable
 
+# Increase recursion limit for large dependency trees
 sys.setrecursionlimit(5000)
+
+# --------------------
+# Helper: Absolute path to repo root
+# --------------------
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+# --------------------
+# Platform-specific icon
+# --------------------
+if sys.platform == "win32":
+    base = "Win32GUI"
+    target_name = "Orion.exe"
+    icon_file = os.path.join(HERE, "icon.ico")
+elif sys.platform == "darwin":
+    base = None  # REQUIRED for macOS GUI
+    target_name = "Orion"  # cx_Freeze adds .app automatically
+    icon_file = os.path.join(HERE, "icon.png")
+else:  # Linux
+    base = None
+    target_name = "Orion"
+    icon_file = None
 
 # --------------------
 # Build options
@@ -12,11 +35,11 @@ build_exe_options = {
         "huggingface_hub", "gguf", "plyer", "tokenizers", "os"
     ],
     "include_files": [
-        "icon.png",       # macOS icon
-        "icon.ico",       # Windows icon
-        "changelog.txt",
-        "privacy_policy.txt",
-        "terms_of_use.txt"
+        os.path.join(HERE, "icon.png"),
+        os.path.join(HERE, "icon.ico"),
+        os.path.join(HERE, "changelog.txt"),
+        os.path.join(HERE, "privacy_policy.txt"),
+        os.path.join(HERE, "terms_of_use.txt")
     ],
 }
 
@@ -29,26 +52,16 @@ bdist_dmg_options = {
 }
 
 # --------------------
-# Platform logic
+# Executable
 # --------------------
-base = None
-target_name = "Orion"
-icon_file = None
-
-if sys.platform == "win32":
-    base = "Win32GUI"
-    target_name = "Orion.exe"
-    icon_file = "icon.ico"
-
-elif sys.platform == "darwin":
-    base = None               # macOS auto-infers GUI
-    target_name = "Orion"     # cx_Freeze will add .app automatically
-    icon_file = "icon.png"
-
-else:  # Linux
-    base = None
-    target_name = "Orion"
-    icon_file = None
+executables = [
+    Executable(
+        "interface.py",
+        base=base,
+        target_name=target_name,
+        icon=icon_file,
+    )
+]
 
 # --------------------
 # Setup
@@ -61,12 +74,5 @@ setup(
         "build_exe": build_exe_options,
         "bdist_dmg": bdist_dmg_options,
     },
-    executables=[
-        Executable(
-            "interface.py",
-            base=base,
-            target_name=target_name,
-            icon=icon_file,
-        )
-    ],
+    executables=executables,
 )
