@@ -42,7 +42,7 @@ jobs:
                       customtkinter requests transformers torch \
                       huggingface_hub gguf plyer tokenizers
 
-      # 5) Debug: list workspace
+      # 5) Debug: list workspace files
       - name: List repository files
         run: |
           pwd
@@ -53,8 +53,9 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE
           python setup_mac.py bdist_dmg
+          echo "DMG build complete"
 
-      # 7) Debug: find DMG files
+      # 7) Debug: find all DMG files
       - name: Debug: find all DMG files
         run: |
           find $GITHUB_WORKSPACE -name "*.dmg" || echo "No DMG found"
@@ -64,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APP_NAME }}-v${{ env.V_NUMBER }}-macOS
-          path: "**/*.dmg"
+          path: "**/*.dmg"  # Search all directories for any .dmg
           if-no-files-found: error
           compression-level: 6
-          overwrite: true
+          overwrite: false
