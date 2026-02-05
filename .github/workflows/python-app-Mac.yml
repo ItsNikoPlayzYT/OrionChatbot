@@ -68,7 +68,7 @@ jobs:
         create-dmg 'build/*/OrionChatbot.app' 'path/to/output-folder/OrionChatbot.dmg'
 
     - name: Upload DMG as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4   # Update to version 4
       with:
         name: OrionChatbot.dmg
         path: 'path/to/output-folder/OrionChatbot.dmg'
