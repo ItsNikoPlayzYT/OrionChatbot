@@ -29,15 +29,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install cx_Freeze pillow dmgbuild
 
-      # Step 4: Convert PNG -> ICNS for macOS icon
+      # Step 4: Convert logo.png -> ICNS for macOS
       - name: Generate ICNS for macOS
         run: |
           mkdir -p icons.icns
-          sips -z 16 16    ${GITHUB_WORKSPACE}/icon.png --out icons.icns/icon_16x16.png
-          sips -z 32 32    ${GITHUB_WORKSPACE}/icon.png --out icons.icns/icon_32x32.png
-          sips -z 128 128  ${GITHUB_WORKSPACE}/icon.png --out icons.icns/icon_128x128.png
-          sips -z 256 256  ${GITHUB_WORKSPACE}/icon.png --out icons.icns/icon_256x256.png
-          sips -z 512 512  ${GITHUB_WORKSPACE}/icon.png --out icons.icns/icon_512x512.png
+          sips -z 16 16    ${GITHUB_WORKSPACE}/logo.png --out icons.icns/icon_16x16.png
+          sips -z 32 32    ${GITHUB_WORKSPACE}/logo.png --out icons.icns/icon_32x32.png
+          sips -z 128 128  ${GITHUB_WORKSPACE}/logo.png --out icons.icns/icon_128x128.png
+          sips -z 256 256  ${GITHUB_WORKSPACE}/logo.png --out icons.icns/icon_256x256.png
+          sips -z 512 512  ${GITHUB_WORKSPACE}/logo.png --out icons.icns/icon_512x512.png
           iconutil -c icns icons.icns -o ${GITHUB_WORKSPACE}/icon.icns
 
       # Step 5: Build macOS DMG
