@@ -26,11 +26,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt   # Install Python dependencies from requirements.txt
 
+    # Check if tests/ directory exists before running tests
     - name: Run tests (if applicable)
       run: |
-        # Assuming you have tests set up in your project, run them here
-        # Example: pytest
-        pytest tests/   # Update with your test framework
+        if [ -d "tests" ]; then
+          echo "Tests directory found. Running tests..."
+          pytest tests/   # Run your tests if the directory exists
+        else
+          echo "No tests directory found. Skipping tests..."
+        fi
 
     - name: Run the application (main.py)
       run: |
