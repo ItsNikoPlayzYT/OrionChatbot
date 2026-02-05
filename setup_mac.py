@@ -17,8 +17,7 @@ build_exe_options = {
         "privacy_policy.txt",
         "terms_of_use.txt",
         "icon.icns"  # macOS icon
-    ],
-    "build_exe": "dist"  # Output folder
+    ]
 }
 
 # Determine base and target name
@@ -33,7 +32,16 @@ setup(
     name="Orion AI Chatbot",
     version="1.3.5",
     description="Orion AI Chatbot by OmniNode",
-    options={"build_exe": build_exe_options},
+    options={
+        "build_exe": build_exe_options,
+        "bdist_dmg": {                     # Added bdist_dmg options
+            "volume_label": "Orion AI Chatbot",
+            "applications_shortcut": True,
+            "icon": "icon.icns",
+            "background": None,
+            "dest_dir": "dist"             # Ensures DMG goes into dist/
+        }
+    },
     executables=[
         Executable(
             "interface.py",
@@ -43,4 +51,3 @@ setup(
         )
     ]
 )
-
