@@ -1,10 +1,10 @@
-name: Build Orion macOS Installer
+name: Build Orion Installers
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 env:
   APP_NAME: "Orion-setup"
@@ -16,15 +16,16 @@ jobs:
 
     steps:
     # Step 1: Checkout code
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-    # Step 2: Set up Python
-    - name: Set up Python
+    # Step 2: Setup Python
+    - name: Set up Python 3.12
       uses: actions/setup-python@v4
       with:
         python-version: "3.12"
 
-    # Step 3: Install Python dependencies
+    # Step 3: Install dependencies
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
@@ -32,22 +33,9 @@ jobs:
                     customtkinter requests transformers torch \
                     huggingface_hub gguf plyer tokenizers
 
-    # Step 4: Generate ICNS from logo.png
-    - name: Generate ICNS for macOS
-      run: |
-        ICONSET=${GITHUB_WORKSPACE}/icons.iconset
-        mkdir -p $ICONSET
-        sips -z 16 16    ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_16x16.png
-        sips -z 32 32    ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_16x16@2x.png
-        sips -z 32 32    ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_32x32.png
-        sips -z 64 64    ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_32x32@2x.png
-        sips -z 128 128  ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_128x128.png
-        sips -z 256 256  ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_128x128@2x.png
-        sips -z 256 256  ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_256x256.png
-        sips -z 512 512  ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_256x256@2x.png
-        sips -z 512 512  ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_512x512.png
-        sips -z 1024 1024 ${GITHUB_WORKSPACE}/logo.png --out $ICONSET/icon_512x512@2x.png
-        iconutil -c icns $ICONSET -o ${GITHUB_WORKSPACE}/icon.icns
+    # Step 4: Verify files exist (debugging)
+    - name: List repository files
+      run: ls -la $GITHUB_WORKSPACE
 
     # Step 5: Build macOS DMG
     - name: Build macOS DMG
@@ -55,8 +43,8 @@ jobs:
         cd $GITHUB_WORKSPACE
         python setup_mac.py bdist_dmg
 
-    # Step 6: Debug - List dist folder
-    - name: List files in dist
+    # Step 6: Verify dist folder exists
+    - name: List dist folder
       run: ls -la dist/
 
     # Step 7: Upload DMG artifact
@@ -66,3 +54,5 @@ jobs:
         name: ${{ env.APP_NAME }}-v${{ env.V_NUMBER }}-macOS
         path: dist/*.dmg
         if-no-files-found: error
+        compression-level: 6
+        overwrite: false
