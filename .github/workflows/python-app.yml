@@ -3,43 +3,55 @@ name: Build OmniNode Cross-Platform
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+# This sets your version and name globally
+env:
+  APP_NAME: "Orion-setup"
+  V_NUMBER: "1.3.5"
+
+permissions:
+  contents: read
 
 jobs:
-  release:
-    name: Build for ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+  build:
+    # This matrix creates a separate runner for each OS
     strategy:
       matrix:
-        # We need all three to get the native file formats
-        os: [windows-latest, macos-latest, ubuntu-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    
+    runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v4
-
+    
     - name: Set up Python 3.10
       uses: actions/setup-python@v4
       with:
         python-version: "3.10"
 
-    - name: Install Dependencies
+    - name: Install dependencies
+      # EDITED: Removed the 'if' statement that caused the PowerShell ParserError
       run: |
         python -m pip install --upgrade pip
-        pip install flet  # The engine that handles Windows/iOS/Android
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install flake8
+        pip install -r requirements.txt
 
     - name: Build Desktop App
+      # EDITED: Added logic to build for the specific OS in the matrix
       run: |
-        # This packages your main.py, logo, and legal files
         flet build ${{ matrix.os == 'windows-latest' && 'windows' || (matrix.os == 'macos-latest' && 'macos' || 'linux') }}
 
-    # Special Step for iPhone (Requires macOS runner)
     - name: Build iOS Project
+      # Only runs on the Mac runner
       if: matrix.os == 'macos-latest'
       run: |
-        flet build ios --no-sign  # Generates the Xcode project for iPhone
+        flet build ios --no-sign
 
     - name: Upload Finished App
       uses: actions/upload-artifact@v4
       with:
-        name: OmniNode-${{ matrix.os }}
+        # EDITED: Uses your v1.3.5 naming convention
+        name: ${{ env.APP_NAME }}-v${{ env.V_NUMBER }}-${{ matrix.os }}
         path: build/
