@@ -62,6 +62,16 @@ jobs:
     - name: Build macOS .app with cx_Freeze
       run: |
         python setup_mac.py build
+        echo "macOS app built successfully"
+
+    - name: Check if the .app exists
+      run: |
+        if [ ! -d "build/*/OrionChatbot.app" ]; then
+          echo "Error: OrionChatbot.app not found in build/*/ directory."
+          exit 1
+        else
+          echo "OrionChatbot.app found!"
+        fi
 
     - name: Create DMG
       run: |
