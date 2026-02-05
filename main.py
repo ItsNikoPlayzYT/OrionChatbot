@@ -822,9 +822,14 @@ class OrionChatbot:
 # For testing purposes
 if __name__ == "__main__":
     orion = OrionChatbot()
-    while True:
-        user_input = input("You: ")
-        if user_input.lower() == 'exit':
-            break
-        response = orion.get_response(user_input)
-        print(f"Orion: {response}")
+    print("Orion Chatbot initialized. Type 'exit' to quit.")
+    try:
+        while True:
+            # The EOFError occurs here if the environment is non-interactive
+            user_input = input("You: ")
+            if user_input.lower() == 'exit':
+                break
+            response = orion.get_response(user_input)
+            print(f"Orion: {response}")
+    except (EOFError, KeyboardInterrupt):
+        print("\n[System] Session ended. Goodbye!")
