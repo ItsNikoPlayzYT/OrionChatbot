@@ -64,18 +64,23 @@ jobs:
         python setup_mac.py build
         echo "macOS app built successfully"
 
-    - name: Check if the .app exists
+    - name: Check if the .app exists and move it if needed
       run: |
-        if [ ! -d "build/*/OrionChatbot.app" ]; then
+        # Create the target directory where the .app should be
+        mkdir -p build/OrionChatbot.app
+
+        # Check if the .app exists and move it to the target directory
+        if [ -d "build/*/OrionChatbot.app" ]; then
+          echo "Found OrionChatbot.app, moving it to build/OrionChatbot.app..."
+          mv build/*/OrionChatbot.app build/OrionChatbot.app
+        else
           echo "Error: OrionChatbot.app not found in build/*/ directory."
           exit 1
-        else
-          echo "OrionChatbot.app found!"
         fi
 
     - name: Create DMG
       run: |
-        create-dmg 'build/*/OrionChatbot.app' 'path/to/output-folder/OrionChatbot.dmg'
+        create-dmg 'build/OrionChatbot.app' 'path/to/output-folder/OrionChatbot.dmg'
 
     - name: Upload DMG as artifact
       uses: actions/upload-artifact@v4   # Update to version 4
